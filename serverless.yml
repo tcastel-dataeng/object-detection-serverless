@@ -1,0 +1,93 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: object-detection-serverless
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+package:
+  exclude:
+    - venv/**
+    - mock_folder/**
+    - tests
+    - tests.py
+    - imagetransform.jpg
+    - requirements.txt
+    - testEvent.json
+
+provider:
+  name: aws
+  runtime: python3.7
+  timeout: 15
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:ListBucket'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - ${opt:bucket_name}
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - ${opt:bucket_name}
+            - '/*'
+    - Effect: 'Allow'
+      Action:
+        - 's3:GetObject'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - ${opt:bucket_name}
+            - '/*'
+
+functions:
+  lambda_function:
+    handler: lambda_function.lambda_handler
+    events:
+      - s3:
+          bucket: ${opt:bucket_name}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: images/
+            - suffix: .jpg
+          existing: true
+    layers:
+      - arn:aws:lambda:us-east-1:113088814899:layer:Klayers-python37-opencv-python-headless:4
+
+
+#    Define function environment variables here
+#    environment:
+#      variable2: value2
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
