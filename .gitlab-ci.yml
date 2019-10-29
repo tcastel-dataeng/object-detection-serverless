@@ -22,9 +22,10 @@ unit-test:
   stage: test
   image: amazonlinux:latest
   before_script:
-    - sudo yum update
+    - sudo su 
+    - yum update
     - python --version
-    - sudo yum install python3 -y
+    - yum install python3 -y
     - which python3
     - pip install requirements.txt
   script:
