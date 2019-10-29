@@ -28,6 +28,6 @@ unit-test:
     - source venv/bin/activate
     - pip install -r requirements.txt
   script:
-    - python3 tests.py
+    - python3 tests.py -v
 
   
