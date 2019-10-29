@@ -72,6 +72,29 @@ def lambda_handler(event, context):
             w = box[2]
             h = box[3]
             draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
+
+    def keep_relevant_predictions(outs,width,height):
+        class_ids = []
+        confidences = []
+        boxes = []
+        
+        for out in outs:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > 0.5:
+                    center_x = int(detection[0] * width)
+                    center_y = int(detection[1] * height)
+                    w = int(detection[2] * width)
+                    h = int(detection[3] * height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
+
+        return boxes, confidences
     
     
     # Get the object from the event and show its content type
@@ -83,52 +106,28 @@ def lambda_handler(event, context):
     classes = download_model_classes_from_s3(bucket_name,"models/yolov3.txt")
     COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
     
-    #charge model
+    #load model
     localFilename_cfg = download_temporary_file_from_S3(bucket_name,"models/yolov3-tiny.cfg")
     localFilename_weights = download_temporary_file_from_S3(bucket_name,"models/yolov3-tiny.weights")
     net = cv2.dnn.readNet(localFilename_weights, localFilename_cfg)
     
-
-    Width = image.shape[1]
-    Height = image.shape[0]
+    #prepare model
     scale = 0.00392
-    
     blob = cv2.dnn.blobFromImage(image, scale, (416,416), (0,0,0), True, crop=False)
-
     net.setInput(blob)
     
-
-    
+    #Apply model
     outs = net.forward(get_output_layers(net))
 
+    #Keep relevant predictions
+    boxes, confidences = keep_relevant_predictions(outs=outs,width=image.shape[1],height=image.shape[0])
     
-    class_ids = []
-    confidences = []
-    boxes = []
+    #Applu NMS
     conf_threshold = 0.5
     nms_threshold = 0.4
-    
-    
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.5:
-                center_x = int(detection[0] * Width)
-                center_y = int(detection[1] * Height)
-                w = int(detection[2] * Width)
-                h = int(detection[3] * Height)
-                x = center_x - w / 2
-                y = center_y - h / 2
-                class_ids.append(class_id)
-                confidences.append(float(confidence))
-                boxes.append([x, y, w, h])
-    
-    
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
-
+    #Draw Bounding Box
     draw_bounding_boxes(image,boxes,indices)
  
         

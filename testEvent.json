@@ -27,7 +27,7 @@
             "arn": "arn:aws:s3:::my_bucket"
             },
             "object": {
-            "key": "images/bus-voiture-vélo-rouen-rue-jean-lecanuet-854x641.jpg",
+            "key": "images/testImage.jpg",
             "size": 1024,
             "eTag": "0123456789abcdef0123456789abcdef",
             "sequencer": "0A1B2C3D4E5F678901"
