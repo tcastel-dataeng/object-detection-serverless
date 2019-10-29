@@ -25,7 +25,10 @@ unit-test:
     - yum update -y
     - python --version
     - yum install python3 -y
-    - pip3 install requirements.txt
+    - pip3 isntall virtualenv
+    - virtualenv -p python3 venv
+    - source venv/bin/activate
+    - pip install requirements.txt
   script:
     - python3 tests.py
 
