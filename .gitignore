@@ -16,11 +16,9 @@ var/
 .installed.cfg
 *.egg
 venv
-mock_folder
 imagetransform.jpg
 __pycache__
 .DS_Store
-tmp
 
 # Serverless directories
 .serverless
