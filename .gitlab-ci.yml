@@ -22,7 +22,7 @@ unit-test:
   stage: test
   image: amazonlinux:latest
   before_script:
-    - yum update
+    - yum update -y
     - python --version
     - yum install python3 -y
     - which python3
