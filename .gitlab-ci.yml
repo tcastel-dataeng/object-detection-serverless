@@ -5,7 +5,9 @@ stages:
 variables:
 
   AWS_DEFAULT_REGION: 'us-east-1'
-  S3_BUCKET: 'tcastel-object-detection'  
+  S3_BUCKET: 'tcastel-object-detection'
+  MODEL: 'tiny'  
+  #normal,tiny
 
 deployement:
   stage: deploy

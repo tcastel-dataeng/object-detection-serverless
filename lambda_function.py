@@ -5,8 +5,6 @@ import cv2
 import numpy as np
 import os
 import sys
-import time
-
 
 def load_file_content_from_S3 (bucket_name,key):
         try:
@@ -16,9 +14,7 @@ def load_file_content_from_S3 (bucket_name,key):
         except Exception as e:
             print(e)
             print('Error getting object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
-        raise e
-
-        
+        raise        
 
 def list_S3_object(bucket_name):
     print(s3.list_objects_v2(Bucket=bucket_name))
@@ -38,8 +34,6 @@ def download_temporary_file_from_S3(bucket_name,key):
         print(e)
         print('Error downloading  object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
         raise e
-    
-
 
 
 s3 = boto3.client('s3')
@@ -79,39 +73,22 @@ def lambda_handler(event, context):
             h = box[3]
             draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
     
-    start = time.time()
     
     # Get the object from the event and show its content type
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     
-    ############################################################################
+    #Read image and prepare classes
     image = read_image_from_S3(bucket_name,key)
-
-    
-    getimage = time.time()   
-    print("time to get image :",getimage - start)
-    
     classes = download_model_classes_from_s3(bucket_name,"models/yolov3.txt")
     COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
     
-    
-    getclasses = time.time()   
-    print("time to create classes :",getclasses-getimage)
-    
-
+    #charge model
     localFilename_cfg = download_temporary_file_from_S3(bucket_name,"models/yolov3-tiny.cfg")
     localFilename_weights = download_temporary_file_from_S3(bucket_name,"models/yolov3-tiny.weights")
-    
-    getdl = time.time()   
-    print("time to download files :",getdl-getclasses)
-    
     net = cv2.dnn.readNet(localFilename_weights, localFilename_cfg)
     
-    
 
-    
-    ##########################################################################
     Width = image.shape[1]
     Height = image.shape[0]
     scale = 0.00392
@@ -120,14 +97,10 @@ def lambda_handler(event, context):
 
     net.setInput(blob)
     
-    createmodel = time.time()   
-    print("time to create model :",createmodel-getdl)
 
     
     outs = net.forward(get_output_layers(net))
-    
-    applymodel = time.time()   
-    print("time to applymodel :",applymodel-createmodel)
+
     
     class_ids = []
     confidences = []
@@ -157,17 +130,14 @@ def lambda_handler(event, context):
     
 
     draw_bounding_boxes(image,boxes,indices)
-
-    getbox = time.time()   
-    print("time to draw boxes :",getbox-applymodel)    
+ 
         
     try:
         filename, file_extension = os.path.splitext(key)
         
         new_key = "transformedImages/"+filename[7:]+"ObjectDetection"+file_extension
         response = s3.put_object(Body=cv2.imencode('.jpg', image)[1].tostring(), Bucket=bucket_name, Key=new_key)
-        putobject = time.time()   
-        print("time to put object in s3 :",putobject-getbox) 
+    
         return response
     except Exception as e:
         print(e)
