@@ -56,6 +56,10 @@ class TestUseS3(unittest.TestCase):
     def printfiles(self):
         lambda_function.list_S3_object(MY_BUCKET)
         self.assertEqual(1,1)
+    
+    def testDownloadFiles(self):
+
+        pass
 
     #def test_run_main(self):
 
