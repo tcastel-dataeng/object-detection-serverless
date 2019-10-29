@@ -17,11 +17,7 @@ def load_file_content_from_S3 (bucket_name,key):
             print(e)
             print('Error getting object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
         raise e
-
         
-
-def list_S3_object(bucket_name):
-    print(s3.list_objects_v2(Bucket=bucket_name))
 
 def read_image_from_S3(bucket_name,key):
         file_content = load_file_content_from_S3(bucket_name,key)
