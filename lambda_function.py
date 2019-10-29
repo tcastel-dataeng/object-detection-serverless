@@ -16,9 +16,6 @@ def load_file_content_from_S3 (bucket_name,key):
             print('Error getting object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
         raise        
 
-def list_S3_object(bucket_name):
-    print(s3.list_objects_v2(Bucket=bucket_name))
-
 def read_image_from_S3(bucket_name,key):
         file_content = load_file_content_from_S3(bucket_name,key)
         np_array = np.fromstring(file_content, np.uint8)
@@ -63,7 +60,7 @@ def lambda_handler(event, context):
         cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
-    def draw_bounding_boxes(image,boxes,indices):
+    def draw_bounding_boxes(image,boxes,indices,class_ids):
         for i in indices:
             i = i[0]
             box = boxes[i]
@@ -94,7 +91,7 @@ def lambda_handler(event, context):
                     confidences.append(float(confidence))
                     boxes.append([x, y, w, h])
 
-        return boxes, confidences
+        return boxes, confidences, class_ids
     
     
     # Get the object from the event and show its content type
@@ -128,7 +125,7 @@ def lambda_handler(event, context):
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
     #Draw Bounding Box
-    draw_bounding_boxes(image,boxes,indices)
+    draw_bounding_boxes(image,boxes,indices,class_ids)
  
         
     try:
