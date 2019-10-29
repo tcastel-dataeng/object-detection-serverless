@@ -25,8 +25,7 @@ unit-test:
     - yum update -y
     - python --version
     - yum install python3 -y
-    - which python3
-    - pip install requirements.txt
+    - pip3 install requirements.txt
   script:
     - python3 tests.py
 
