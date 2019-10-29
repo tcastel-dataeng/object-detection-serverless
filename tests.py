@@ -52,14 +52,12 @@ class TestUseS3(unittest.TestCase):
     def test_load_file_content_from_S3(self):
         testContent = lambda_function.load_file_content_from_S3(MY_BUCKET,"test.txt")
         self.assertEqual(testContent.decode("utf-8"),"test")
-
-    def printfiles(self):
-        lambda_function.list_S3_object(MY_BUCKET)
-        self.assertEqual(1,1)
     
-    def testDownloadFiles(self):
-
-        pass
+    def test_download_files_from_S3(self):
+        filename = lambda_function.download_temporary_file_from_S3(MY_BUCKET,"test.txt")
+        with open(filename) as file:
+            testContent = file.read()
+            self.assertEqual(testContent,"test")
 
     #def test_run_main(self):
 
