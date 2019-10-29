@@ -25,8 +25,8 @@ def download_temporary_file_from_S3(bucket_name,key):
 
     localFilename = '/tmp/{}'.format(os.path.basename(key))
     try:    
-    s3.download_file(Bucket=bucket_name, Key=key, Filename=localFilename_cfg) 
-    return localFilename
+        s3.download_file(Bucket=bucket_name, Key=key, Filename=localFilename_cfg) 
+        return localFilename
     except Exception as e:
         print(e)
         print('Error downloading  object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
@@ -34,11 +34,11 @@ def download_temporary_file_from_S3(bucket_name,key):
     
 
     
-    localFilename_cfg = '/tmp/{}'.format(os.path.basename("models/yolov3.cfg"))
-    localFilename_weights = '/tmp/{}'.format(os.path.basename("models/yolov3.weights"))
+    #localFilename_cfg = '/tmp/{}'.format(os.path.basename("models/yolov3.cfg"))
+    #localFilename_weights = '/tmp/{}'.format(os.path.basename("models/yolov3.weights"))
     
-    s3.download_file(Bucket=bucket_name, Key="models/yolov3-tiny.cfg", Filename=localFilename_cfg)
-    s3.download_file(Bucket=bucket_name, Key="models/yolov3-tiny.weights", Filename=localFilename_weights)
+    #s3.download_file(Bucket=bucket_name, Key="models/yolov3-tiny.cfg", Filename=localFilename_cfg)
+    #s3.download_file(Bucket=bucket_name, Key="models/yolov3-tiny.weights", Filename=localFilename_weights)
 
 
 
@@ -54,7 +54,7 @@ def lambda_handler(event, context):
 
         return output_layers
 
-     def download_model_classes_from_s3(bucket_name,key):
+    def download_model_classes_from_s3(bucket_name,key):
 
         file_classes = load_file_content_from_S3(bucket_name,key)
         return file_classes.decode("utf-8").split("\n")

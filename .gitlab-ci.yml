@@ -1,0 +1,33 @@
+stages:
+  - test
+  - deploy
+
+variables:
+
+  AWS_DEFAULT_REGION: 'us-east-1'
+  S3_BUCKET: 'tcastel-object-detection'  
+
+deployement:
+  stage: deploy
+  image: node:latest
+  before_script:
+    - npm config set prefix /usr/local
+    - npm install -g serverless
+  script:
+    - serverless deploy --bucket_name $S3_BUCKET --verbose
+  environment: production
+
+
+unit-test:
+  stage: test
+  image: amazonlinux:latest
+  before_script:
+    - sudo yum update
+    - python --version
+    - sudo yum install python3 -y
+    - which python3
+    - pip install requirements.txt
+  script:
+    - python3 tests.py
+
+  
