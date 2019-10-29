@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import os
 import sys
+from utils import *
 
 def load_file_content_from_S3 (bucket_name,key):
         try:
@@ -32,67 +33,16 @@ def download_temporary_file_from_S3(bucket_name,key):
         print('Error downloading  object {} in the bucket {}. Make sure they exist and your bucket is in the same region as this function.'.format(key, bucket_name))
         raise e
 
+def download_model_classes_from_s3(bucket_name,key):
+
+    file_classes = load_file_content_from_S3(bucket_name,key)
+    return file_classes.decode("utf-8").split("\n")
+
 
 s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
-    
-    def get_output_layers(net):
-    
-        layer_names = net.getLayerNames()
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-
-        return output_layers
-
-    def download_model_classes_from_s3(bucket_name,key):
-
-        file_classes = load_file_content_from_S3(bucket_name,key)
-        return file_classes.decode("utf-8").split("\n")
-
-
-    def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
-
-        label = str(classes[class_id]) + str(format(confidence * 100, '.2f')) + '%'
-        color = COLORS[class_id]
-
-        cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 2)
-        cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
-
-    def draw_bounding_boxes(image,boxes,indices,class_ids):
-        for i in indices:
-            i = i[0]
-            box = boxes[i]
-            x = box[0]
-            y = box[1]
-            w = box[2]
-            h = box[3]
-            draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
-
-    def keep_relevant_predictions(outs,width,height):
-        class_ids = []
-        confidences = []
-        boxes = []
-        
-        for out in outs:
-            for detection in out:
-                scores = detection[5:]
-                class_id = np.argmax(scores)
-                confidence = scores[class_id]
-                if confidence > 0.5:
-                    center_x = int(detection[0] * width)
-                    center_y = int(detection[1] * height)
-                    w = int(detection[2] * width)
-                    h = int(detection[3] * height)
-                    x = center_x - w / 2
-                    y = center_y - h / 2
-                    class_ids.append(class_id)
-                    confidences.append(float(confidence))
-                    boxes.append([x, y, w, h])
-
-        return boxes, confidences, class_ids
-    
     
     # Get the object from the event and show its content type
     bucket_name = event['Records'][0]['s3']['bucket']['name']
@@ -101,7 +51,6 @@ def lambda_handler(event, context):
     #Read image and prepare classes
     image = read_image_from_S3(bucket_name,key)
     classes = download_model_classes_from_s3(bucket_name,"models/yolov3.txt")
-    COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
     
     #load model
     localFilename_cfg = download_temporary_file_from_S3(bucket_name,"models/yolov3-tiny.cfg")
@@ -117,15 +66,16 @@ def lambda_handler(event, context):
     outs = net.forward(get_output_layers(net))
 
     #Keep relevant predictions
-    boxes, confidences = keep_relevant_predictions(outs=outs,width=image.shape[1],height=image.shape[0])
+    boxes, confidences, class_ids = keep_relevant_predictions(outs=outs,width=image.shape[1],height=image.shape[0])
     
-    #Applu NMS
+    #Apply NMS
     conf_threshold = 0.5
     nms_threshold = 0.4
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     
     #Draw Bounding Box
-    draw_bounding_boxes(image,boxes,indices,class_ids)
+    colors = np.random.uniform(0, 255, size=(len(classes), 3))
+    draw_bounding_boxes(image,boxes,indices,class_ids, classes,confidences,colors)
  
         
     try:
