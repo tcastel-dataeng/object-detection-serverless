@@ -66,14 +66,14 @@ def lambda_handler(event, context):
     
     #Read image and prepare classes
     image = read_image_from_S3(bucket_name, key)
-    classes = download_model_classes_from_s3(bucket_name, "models/yolov3.txt")
+    classes = download_model_classes_from_S3(bucket_name, "models/yolov3.txt")
     
     #Load model
     localFilename_cfg = download_temporary_file_from_S3(bucket_name, "models/yolov3-tiny.cfg")
     localFilename_weights = download_temporary_file_from_S3(bucket_name, "models/yolov3-tiny.weights")
     
     #Detect objects in an image write the detection on the image
-    object_detection(image, classes, localFilename_cfg, localFilename_weights)
+    object_detection(image, classes, localFilename_weights, localFilename_cfg)
 
     #Create a new key for the image
     filename, file_extension = os.path.splitext(key)
