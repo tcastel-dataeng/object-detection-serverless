@@ -44,7 +44,8 @@ def download_temporary_file_from_S3(bucket_name, key):
     localFilename = '/tmp/{}'.format(os.path.basename(key))
     f = tempfile.NamedTemporaryFile(delete=False)    
     f.write(load_file_content_from_S3(bucket_name, key)) 
-
+    f.seek(0)
+    
     return f.name    
 
 

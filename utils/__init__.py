@@ -56,7 +56,7 @@ def keep_relevant_predictions(outs, width, height):
 
 def object_detection(image, classes, model_weight_path, model_conf_path):
     
-    net = cv2.dnn.readNet(model_weight_path, model_conf_path)
+    net = cv2.dnn.readNetFromDarknet(model_weight_path, model_conf_path)
     
     #prepare model
     scale = 0.00392
