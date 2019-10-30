@@ -26,7 +26,7 @@ def read_image_from_S3(bucket_name, key):
         np_array = np.fromstring(file_content, np.uint8)
         return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
-def download_temporary_file_from_S3_bis(bucket_name, key):
+def download_temporary_file_from_S3(bucket_name, key):
 
     localFilename = '/tmp/{}'.format(os.path.basename(key))
     try:    
@@ -39,13 +39,13 @@ def download_temporary_file_from_S3_bis(bucket_name, key):
         .format(key, bucket_name))
         raise e
 
-def download_temporary_file_from_S3(bucket_name, key):
+def download_temporary_file_from_S3_bis(bucket_name, key):
 
     localFilename = '/tmp/{}'.format(os.path.basename(key))
     f = tempfile.NamedTemporaryFile(delete=False)    
     f.write(load_file_content_from_S3(bucket_name, key)) 
-    f.seek(0)
-    
+    #f.seek(0)
+
     return f.name    
 
 
