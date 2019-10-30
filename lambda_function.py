@@ -29,22 +29,25 @@ def read_image_from_S3(bucket_name, key):
 def download_temporary_file_from_S3(bucket_name, key):
 
     localFilename = '/tmp/{}'.format(os.path.basename(key))
-    try:    
-        s3.download_file(Bucket=bucket_name, Key=key, Filename=localFilename) 
+
+    if os.path.exists(localFilename):
         return localFilename
-    except Exception as e:
-        print(e)
-        print("""Error downloading  object {} in the bucket {}. Make sure they 
-        exist and your bucket is in the same region as this function."""
-        .format(key, bucket_name))
-        raise e
+    else :
+        try:    
+            s3.download_file(Bucket=bucket_name, Key=key, Filename=localFilename) 
+            return localFilename
+        except Exception as e:
+            print(e)
+            print("""Error downloading  object {} in the bucket {}. Make sure they 
+            exist and your bucket is in the same region as this function."""
+            .format(key, bucket_name))
+            raise e
 
 def download_temporary_file_from_S3_bis(bucket_name, key):
 
     localFilename = '/tmp/{}'.format(os.path.basename(key))
     f = tempfile.NamedTemporaryFile(delete=False)    
     f.write(load_file_content_from_S3(bucket_name, key)) 
-    #f.seek(0)
 
     return f.name    
 
