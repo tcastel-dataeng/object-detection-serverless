@@ -48,9 +48,9 @@ def read_image_from_S3(bucket_name, key):
     """Return an image object."""
 
 
-        file_content = load_file_content_from_S3(bucket_name, key)
-        np_array = np.frombuffer(file_content, np.uint8)
-        return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+    file_content = load_file_content_from_S3(bucket_name, key)
+    np_array = np.frombuffer(file_content, np.uint8)
+    return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
 
 def download_temporary_file_from_S3(bucket_name, key):
