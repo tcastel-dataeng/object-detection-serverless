@@ -13,6 +13,10 @@ MY_PREFIX = "mock_folder"
 @mock_s3
 class TestUseS3(unittest.TestCase):
     def setUp(self):
+        
+        os.mkdir("tmp")
+        os.mkdir("tmp/models")
+        
         client = boto3.client(
             "s3",
             region_name="us-east-1",
@@ -36,8 +40,13 @@ class TestUseS3(unittest.TestCase):
         current_dir = os.path.dirname(__file__)
         fixtures_dir = os.path.join(current_dir, MY_PREFIX)
         _upload_fixtures(MY_BUCKET, fixtures_dir)
+
     
     def tearDown(self):
+
+        os.rmdir("tmp/models")
+        os.rmdir("tmp")
+        
         s3 = boto3.resource(
             "s3",
             region_name="us-east-1",
@@ -59,13 +68,13 @@ class TestUseS3(unittest.TestCase):
             testContent = file.read()
             self.assertEqual(testContent,"test")
 
-    #def test_run_main(self):
+    def test_run_main(self):
 
-    #    with open('testEvent.json', 'r') as test_event_file:
-    #        event = json.load(test_event_file)
+        with open('testEvent.json', 'r') as test_event_file:
+            event = json.load(test_event_file)
 
-    #    response = lambda_function.lambda_handler(event,0)
-    #    self.assertEqual(response["ResponseMetadata"]["HTTPStatusCode"],200)
+        response = lambda_function.lambda_handler(event,0)
+        self.assertEqual(response["ResponseMetadata"]["HTTPStatusCode"],200)
     
 
 

@@ -6,7 +6,7 @@ import numpy as np
 import os
 import sys
 import tempfile
-from utils import *
+from objectdetection import *
 
 
 def load_file_content_from_S3(bucket_name, key):
@@ -23,7 +23,7 @@ def load_file_content_from_S3(bucket_name, key):
 
 def read_image_from_S3(bucket_name, key):
         file_content = load_file_content_from_S3(bucket_name, key)
-        np_array = np.fromstring(file_content, np.uint8)
+        np_array = np.frombuffer(file_content, np.uint8)
         return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
 def download_temporary_file_from_S3(bucket_name, key):
