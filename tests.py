@@ -59,11 +59,16 @@ class TestUseS3(unittest.TestCase):
         bucket.delete()
     
     def test_load_file_content_from_S3(self):
-        testContent = lambda_function.load_file_content_from_S3(MY_BUCKET,"test.txt")
+        testContent = lambda_function.load_file_content_from_S3(
+                                                    MY_BUCKET,
+                                                    "test.txt")
+
         self.assertEqual(testContent.decode("utf-8"),"test")
     
     def test_download_files_from_S3(self):
-        filename = lambda_function.download_temporary_file_from_S3(MY_BUCKET,"test.txt")
+        filename = lambda_function.download_temporary_file_from_S3(
+                                                    MY_BUCKET,
+                                                    "test.txt")
         with open(filename) as file:
             testContent = file.read()
             self.assertEqual(testContent,"test")
@@ -74,7 +79,8 @@ class TestUseS3(unittest.TestCase):
             event = json.load(test_event_file)
 
         response = lambda_function.lambda_handler(event,0)
-        self.assertEqual(response["ResponseMetadata"]["HTTPStatusCode"],200)
+        self.assertEqual(response["ResponseMetadata"]\
+                                    ["HTTPStatusCode"],200)
     """
     
 
