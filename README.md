@@ -43,7 +43,9 @@ https://github.com/keithrozario/Klayers
 
 About the object detection code :
 https://github.com/opencv/opencv/tree/master/samples/dnn
+
 https://www.arunponnusamy.com/yolo-object-detection-opencv-python.html
+
 https://github.com/arunponnusamy/object-detection-opencv
 
 For the tests :
