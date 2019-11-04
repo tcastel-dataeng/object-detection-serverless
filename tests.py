@@ -4,12 +4,16 @@ import unittest
 import boto3
 import botocore
 from moto import mock_s3
-import lambda_function
 import json
 
 MY_BUCKET = "my_bucket"
 MY_PREFIX = "mock_folder"
 
+os.environ["FILE_CLASSES_NAME"] = "yolov3.txt"
+os.environ["FILE_CONFIG_NAME"] = "yolov3.cfg"
+os.environ["FILE_WEIGHTS_NAME"] = "yolov3.weights"
+
+import lambda_function
 
 @mock_s3
 class TestUseS3(unittest.TestCase):
