@@ -23,6 +23,7 @@ import tempfile
 from objectdetection import *
 
 
+
 def load_file_content_from_S3(bucket_name, key):
     """Return the content of the file loaded."""
 
@@ -103,16 +104,17 @@ def lambda_handler(event, context):
 
 #   Read image and prepare classes
     image = read_image_from_S3(bucket_name, key)
-    classes = load_model_classes_from_S3(bucket_name, "models/yolov3.txt")
+    classes = load_model_classes_from_S3(
+        bucket_name, "models/" + FILE_CLASSES_NAME)
 
 #   Load model
     localFilename_cfg = download_temporary_file_from_S3(
         bucket_name,
-        "models/yolov3-tiny.cfg")
+        "models/" + FILE_CONFIG_NAME)
 
     localFilename_weights = download_temporary_file_from_S3(
         bucket_name,
-        "models/yolov3-tiny.weights")
+        "models/" + FILE_WEIGHTS_NAME)
 
 #   Detect objects in an image write the detection on the image
     object_detection(image, classes, localFilename_weights, localFilename_cfg)

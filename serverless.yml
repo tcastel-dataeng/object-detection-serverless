@@ -74,6 +74,11 @@ functions:
           existing: true
     layers:
       - arn:aws:lambda:us-east-1:113088814899:layer:Klayers-python37-opencv-python-headless:4
+    
+    environment:
+      - FILE_CLASSES_NAME : yolov3.txt
+      - FILE_CONFIG_NAME : yolov3.cfg
+      - FILE_WEIGHTS_NAME : yolov3.weights
 
 
 #    Define function environment variables here
