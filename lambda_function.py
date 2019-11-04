@@ -20,7 +20,7 @@ import numpy as np
 import os
 import sys
 import tempfile
-from objectdetection import *
+from objectdetection import object_detection
 
 
 
