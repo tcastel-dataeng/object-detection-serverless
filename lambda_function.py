@@ -23,6 +23,10 @@ import tempfile
 from objectdetection import object_detection
 
 
+FILE_CLASSES_NAME = os.environ["FILE_CLASSES_NAME"]
+FILE_CONFIG_NAME = os.environ["FILE_CONFIG_NAME"]
+FILE_WEIGHTS_NAME = os.environ["FILE_WEIGHTS_NAME"]
+
 
 def load_file_content_from_S3(bucket_name, key):
     """Return the content of the file loaded."""
