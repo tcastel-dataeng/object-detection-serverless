@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#
+# Author : Théo Castel
+# Python version 3.7.4
 
 """A simple lamnda that detect object on an image.
 
