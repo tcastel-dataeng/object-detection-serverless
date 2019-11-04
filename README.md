@@ -22,3 +22,16 @@ Prerequites :
 
 
 Sources and inspirations :
+
+To chose the model :
+https://towardsdatascience.com/a-recipe-for-using-open-source-machine-learning-models-within-your-company-1aed833a59b5
+
+For the lambda layer :
+https://github.com/keithrozario/Klayers 
+
+About the object detection code :
+https://github.com/opencv/opencv/tree/master/samples/dnn
+https://www.arunponnusamy.com/yolo-object-detection-opencv-python.html
+
+For the tests :
+https://medium.com/@l.peppoloni/how-to-mock-s3-services-in-python-tests-dd5851842946
