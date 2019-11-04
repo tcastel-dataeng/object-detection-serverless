@@ -1,6 +1,6 @@
 # object-detection-serverless
 
-This Lambda serverless function is triggered by an S3 event when an image is uploaded to an S3. It detect the object on an image and save this prediction in the same S3. 
+This Lambda serverless function is triggered by an S3 event when an image is uploaded to an S3. It detects the object on an image and save this prediction in the same S3. 
 
 <h1>Prerequisites :</h1>
 
@@ -17,7 +17,7 @@ This Lambda serverless function is triggered by an S3 event when an image is upl
    
 - Fetch the model configuration and weights from darknet : https://pjreddie.com/darknet/yolo/ and save them under the models path of your bucket. If you want a quick start you can use the tiny model present in the mockfolder. Although it might not be the most efficient model.
 
-- Add the file of classes into your S3 under the model path (it is also present in the mockfolder directory).
+- Add the file of classes into your S3 under the model path (it is also present in the mockfolder directory as yolov3.txt).
 
 <h1>Get started :</h1>
 
@@ -44,6 +44,7 @@ https://github.com/keithrozario/Klayers
 About the object detection code :
 https://github.com/opencv/opencv/tree/master/samples/dnn
 https://www.arunponnusamy.com/yolo-object-detection-opencv-python.html
+https://github.com/arunponnusamy/object-detection-opencv
 
 For the tests :
 https://medium.com/@l.peppoloni/how-to-mock-s3-services-in-python-tests-dd5851842946
