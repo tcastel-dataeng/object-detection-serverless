@@ -15,7 +15,7 @@ This Lambda serverless function is triggered by an S3 event when an image is upl
                     └─ transformedImages/
     ```
    
-- Fetch the model configuration and weights from darknet : https://pjreddie.com/darknet/yolo/ and save them under the models path of your bucket. If you want a quick start you can use the tiny model present in the mockfolder. Although it might not be the most efficient model.
+- Fetch the model configuration and weights from darknet : https://pjreddie.com/darknet/yolo/ and save them under the models path of your bucket. If you want a quick start you can use the tiny model present in the mock_folder (situated in the modules/tests directory). Although it might not be the most efficient model.
 
 - Add the file of classes into your S3 under the model path (it is also present in the mockfolder directory as yolov3.txt).
 
@@ -31,7 +31,7 @@ This Lambda serverless function is triggered by an S3 event when an image is upl
 - Enter the project directory and create a new virtualenv : `$ virtualenv venv`
 - `$ source venv/bin/activate`
 - Use the requirements.txt to install dependencies :`$ pip install -r requirements.txt`
-- `$ python tests.py`
+- `$ python3 -m modules.tests.tests -v`
 
 <h1>Sources and inspirations :</h1>
 
