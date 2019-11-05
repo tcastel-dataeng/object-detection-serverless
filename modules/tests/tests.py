@@ -1,4 +1,5 @@
 import os
+import sys
 import tempfile
 import unittest
 import boto3
@@ -13,7 +14,11 @@ os.environ["FILE_CLASSES_NAME"] = "yolov3.txt"
 os.environ["FILE_CONFIG_NAME"] = "yolov3.cfg"
 os.environ["FILE_WEIGHTS_NAME"] = "yolov3.weights"
 
+sys.path.append("../..")
+
 import lambda_function
+#from ...lambda_function import load_file_content_from_S3
+#from ...lambda_function import download_temporary_file_from_S3
 
 @mock_s3
 class TestUseS3(unittest.TestCase):

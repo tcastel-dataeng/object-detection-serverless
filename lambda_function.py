@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Author : Théo Castel
-# Python version 3.7.4
+# Python 
+# version 3.7.4
 
 """A simple lamnda that detect object on an image.
 
@@ -20,7 +21,7 @@ import numpy as np
 import os
 import sys
 import tempfile
-from objectdetection import object_detection
+from modules.objectdetection.object_detection import object_detection
 
 
 FILE_CLASSES_NAME = os.environ["FILE_CLASSES_NAME"]
