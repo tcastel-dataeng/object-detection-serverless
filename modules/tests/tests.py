@@ -18,8 +18,6 @@ sys.path.append("../..")
 
 import lambda_function
 
-#from ...lambda_function import load_file_content_from_S3
-#from ...lambda_function import download_temporary_file_from_S3
 
 @mock_s3
 class TestUseS3(unittest.TestCase):
