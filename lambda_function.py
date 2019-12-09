@@ -78,15 +78,6 @@ def download_temporary_file_from_S3(bucket_name, key):
             raise e
 
 
-def download_temporary_file_from_S3_bis(bucket_name, key):
-
-    localFilename = '/tmp/{}'.format(os.path.basename(key))
-    f = tempfile.NamedTemporaryFile(delete=False)
-    f.write(load_file_content_from_S3(bucket_name, key))
-
-    return f.name
-
-
 def load_model_classes_from_S3(bucket_name, key):
     """Return a list with all the classes detected by the model"""
 

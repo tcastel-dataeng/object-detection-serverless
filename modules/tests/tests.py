@@ -17,6 +17,7 @@ os.environ["FILE_WEIGHTS_NAME"] = "yolov3.weights"
 sys.path.append("../..")
 
 import lambda_function
+
 #from ...lambda_function import load_file_content_from_S3
 #from ...lambda_function import download_temporary_file_from_S3
 
