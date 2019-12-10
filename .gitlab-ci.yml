@@ -19,14 +19,14 @@ deployement:
   environment: production
 
 
-unit-test:
-  stage: test
-  image: python:3.7.5
-  before_script:
-    - python --version
-    - pip install virtualenv
-    - virtualenv -p python venv
-    - source venv/bin/activate
-    - pip install -r requirements.txt
-  script:
-    - python3 -m modules.tests.tests -v
+#unit-test:
+#  stage: test
+#  image: python:3.7.5
+#  before_script:
+#    - python --version
+#    - pip install virtualenv
+#    - virtualenv -p python venv
+#    - source venv/bin/activate
+#    - pip install -r requirements.txt
+#  script:
+#    - python3 -m modules.tests.tests -v
