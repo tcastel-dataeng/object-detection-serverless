@@ -22,37 +22,20 @@ import os
 import sys
 import tempfile
 from modules.objectdetection.object_detection import object_detection
+import base64
 
 
 FILE_CLASSES_NAME = os.environ["FILE_CLASSES_NAME"]
 FILE_CONFIG_NAME = os.environ["FILE_CONFIG_NAME"]
 FILE_WEIGHTS_NAME = os.environ["FILE_WEIGHTS_NAME"]
 
+bucket_name = "tcastel-object-detection"
 
-
-def load_file_content_from_S3(bucket_name, key):
-    """Return the content of the file loaded."""
-
-    try:
-        file_obj = s3.get_object(Bucket=bucket_name, Key=key)
-        file_content = file_obj["Body"].read()
-        return file_content
-
-    except Exception as e:
-        print(e)
-        print("""Error getting object {} in the bucket {}. Make sure they
-                exist and your bucket is in the
-                same region as this function.""".format(key, bucket_name))
-        raise e
-
-
-def read_image_from_S3(bucket_name, key):
+def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
 
-    file_content = load_file_content_from_S3(bucket_name, key)
-    np_array = np.frombuffer(file_content, np.uint8)
+    np_array = np.frombuffer(body, np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-
 
 def download_temporary_file_from_S3(bucket_name, key):
     """Download a file from S3 and return the filename."""
@@ -90,17 +73,12 @@ s3 = boto3.client('s3')
 
 def lambda_handler(event, context):
 
-    #   print("Received event: " + json.dumps(event, indent=2))
-
-    #   Get the object from the event
-    bucket_name = event['Records'][0]['s3']['bucket']['name']
-    key = urllib.parse\
-                .unquote_plus(
-                    event['Records'][0]['s3']['object']['key'],
-                    encoding='utf-8')
+    body = event["body"]
 
 #   Read image and prepare classes
-    image = read_image_from_S3(bucket_name, key)
+    
+    image = read_image_from_API_Gateway(base64.b64decode(body))
+    
     classes = load_model_classes_from_S3(
         bucket_name, "models/" + FILE_CLASSES_NAME)
 
@@ -117,10 +95,16 @@ def lambda_handler(event, context):
     object_detection(image, classes, localFilename_weights, localFilename_cfg)
 
 #   Create a new key for the image
-    filename, file_extension = os.path.splitext(key)
-    new_key = "transformedImages/" + filename[7:] +\
-        "ObjectDetection" + file_extension
 
+    return {
+      "isBase64Encoded": True,
+      "statusCode": 200,
+      "headers": { "content-type": "image/jpeg"},
+      "body":  image
+    }
+
+
+    """
     try:
 
         response = s3.put_object(
@@ -129,9 +113,4 @@ def lambda_handler(event, context):
             Key=new_key)
 
         return response
-    except Exception as e:
-        print(e)
-        print("""Error put in object {} in the bucket {}. Make sure they
-        exist and your bucket is in the same region as this function."""
-              .format(key, bucket_name))
-        raise e
+    """
