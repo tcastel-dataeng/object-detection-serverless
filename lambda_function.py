@@ -57,7 +57,7 @@ def read_image_from_S3(bucket_name, key):
 
 def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
-    decoded_body = base64.decodebytes(body).decode("utf-8")
+    decoded_body = base64.decodebytes(body)
     print(decoded_body)
     np_array = np.frombuffer(decoded_body, np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
