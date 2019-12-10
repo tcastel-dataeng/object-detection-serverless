@@ -31,6 +31,21 @@ FILE_WEIGHTS_NAME = os.environ["FILE_WEIGHTS_NAME"]
 
 bucket_name = "tcastel-object-detection"
 
+def load_file_content_from_S3(bucket_name, key):
+    """Return the content of the file loaded."""
+
+    try:
+        file_obj = s3.get_object(Bucket=bucket_name, Key=key)
+        file_content = file_obj["Body"].read()
+        return file_content
+
+    except Exception as e:
+        print(e)
+        print("""Error getting object {} in the bucket {}. Make sure they
+                exist and your bucket is in the
+                same region as this function.""".format(key, bucket_name))
+        raise e
+
 def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
 
