@@ -16,7 +16,7 @@ deployement:
     - npm config set prefix /usr/local
     - npm install -g serverless
   script:
-    - serverless remove --bucket_name $S3_BUCKET --verbose
+    - serverless deploy --bucket_name $S3_BUCKET --verbose
   environment: production
 
 
