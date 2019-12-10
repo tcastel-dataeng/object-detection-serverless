@@ -46,10 +46,20 @@ def load_file_content_from_S3(bucket_name, key):
                 same region as this function.""".format(key, bucket_name))
         raise e
 
+def read_image_from_S3(bucket_name, key):
+    """Return the matrice of the image."""
+    
+    file_content = load_file_content_from_S3(bucket_name, key)
+    print("!!!!!!!!!!!!!!!")
+    print(file_content)
+    np_array = np.frombuffer(file_content, np.uint8)
+    return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+
 def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
-
-    np_array = np.frombuffer(body, np.uint8)
+    decoded_body = base64.decodebytes(body).decode("utf-8")
+    print(decoded_body)
+    np_array = np.frombuffer(decoded_body, np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
 def download_temporary_file_from_S3(bucket_name, key):
@@ -92,7 +102,7 @@ def lambda_handler(event, context):
 
 #   Read image and prepare classes
     
-    image = read_image_from_API_Gateway(base64.b64decode(body))
+    image = read_image_from_API_Gateway(body)
     
     classes = load_model_classes_from_S3(
         bucket_name, "models/" + FILE_CLASSES_NAME)

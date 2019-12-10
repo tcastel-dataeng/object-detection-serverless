@@ -20,6 +20,7 @@ imagetransform.jpg
 __pycache__
 .DS_Store
 .vscode
+testimage
 
 # Serverless directories
 .serverless
