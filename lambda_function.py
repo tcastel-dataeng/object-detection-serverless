@@ -48,8 +48,10 @@ def load_file_content_from_S3(bucket_name, key):
 
 def read_image_from_S3(bucket_name, key):
     """Return the matrice of the image."""
-
+    
     file_content = load_file_content_from_S3(bucket_name, key)
+    print("!!!!!!!!!!!!!!!")
+    print(file_content)
     np_array = np.frombuffer(file_content, np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
