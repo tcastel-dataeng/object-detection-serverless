@@ -10,7 +10,10 @@ variables:
 
 deployement:
   stage: deploy
-  image: softinstigate/serverless:latest
+  image: node:latest
+  before_script:
+    - npm config set prefix /usr/local
+    - npm install -g serverless
   script:
     - serverless deploy --bucket_name $S3_BUCKET --verbose
   environment: production
