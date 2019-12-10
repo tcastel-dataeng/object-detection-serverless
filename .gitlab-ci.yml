@@ -14,6 +14,8 @@ deployement:
   before_script:
     - npm config set prefix /usr/local
     - npm install -g serverless
+    - npm install --save-dev serverless-apigw-binary
+    - npm install --save-dev serverless-apigwy-binary
   script:
     - serverless deploy --bucket_name $S3_BUCKET --verbose
   environment: production

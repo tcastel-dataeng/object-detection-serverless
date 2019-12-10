@@ -46,20 +46,10 @@ def load_file_content_from_S3(bucket_name, key):
                 same region as this function.""".format(key, bucket_name))
         raise e
 
-def read_image_from_S3(bucket_name, key):
-    """Return the matrice of the image."""
-    
-    file_content = load_file_content_from_S3(bucket_name, key)
-    print("!!!!!!!!!!!!!!!")
-    print(file_content)
-    np_array = np.frombuffer(file_content, np.uint8)
-    return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-
 def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
-    decoded_body = base64.b64decode(body)
-    print(decoded_body)
-    np_array = np.frombuffer(decoded_body, np.uint8)
+
+    np_array = np.frombuffer(base64.b64decode(body), np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
 def download_temporary_file_from_S3(bucket_name, key):
@@ -119,12 +109,9 @@ def lambda_handler(event, context):
 #   Detect objects in an image write the detection on the image
     object_detection(image, classes, localFilename_weights, localFilename_cfg)
 
-#   Create a new key for the image
-
-     # Write grayscale image to /tmp
     cv2.imwrite("/tmp/detected.jpg", image)
     
-    # Convert grayscale image into utf-8 encoded base64
+    
     with open("/tmp/detected.jpg", "rb") as imageFile:
       str = base64.b64encode(imageFile.read())
       encoded_img = str.decode("utf-8")
@@ -135,15 +122,3 @@ def lambda_handler(event, context):
       "headers": { "content-type": "image/jpeg"},
       "body":  encoded_img
     }
-
-
-    """
-    try:
-
-        response = s3.put_object(
-            Body=cv2.imencode('.jpg', image)[1].tostring(),
-            Bucket=bucket_name,
-            Key=new_key)
-
-        return response
-    """
