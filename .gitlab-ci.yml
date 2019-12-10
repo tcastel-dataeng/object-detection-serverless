@@ -31,5 +31,3 @@ unit-test:
     - pip install -r requirements.txt
   script:
     - python3 -m modules.tests.tests -v
-
-  
