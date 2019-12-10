@@ -30,17 +30,6 @@ package:
     - requirements.txt
     - testEvent.json
 
-plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
-
-custom:
-apigwBinary:
-  types:
-    - 'image/jpeg'
-    - 'image/png'
-    - '*/*'
-
 provider:
   name: aws
   runtime: python3.7
@@ -81,7 +70,6 @@ functions:
           method: post
           path: object-detection
           integration: lambda
-          contentHandling: CONVERT_TO_BINARY
     layers:
       - arn:aws:lambda:us-east-1:113088814899:layer:Klayers-python37-opencv-python-headless:4
     
