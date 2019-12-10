@@ -20,16 +20,6 @@ service: object-detection-serverless
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
-plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
-
-custom:
-apigwBinary:
-  types:
-    - 'image/jpeg'
-
-
 package:
   exclude:
     - venv/**
@@ -39,6 +29,17 @@ package:
     - imagetransform.jpg
     - requirements.txt
     - testEvent.json
+
+plugins:
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
+
+custom:
+apigwBinary:
+  types:
+    - 'image/jpeg'
+    - 'image/png'
+    - '*/*'
 
 provider:
   name: aws
