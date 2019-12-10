@@ -125,7 +125,7 @@ def lambda_handler(event, context):
       "isBase64Encoded": True,
       "statusCode": 200,
       "headers": { "content-type": "image/jpeg"},
-      "body":  base64.b64encode(np.getbuffer(image)).decode("utf-8")
+      "body":  base64.b64encode(image.tobytes().decode("utf-8")).decode("utf-8")
     }
 
 
