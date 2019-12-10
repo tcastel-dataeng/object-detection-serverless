@@ -57,7 +57,7 @@ def read_image_from_S3(bucket_name, key):
 
 def read_image_from_API_Gateway(body):
     """Return the matrice of the image."""
-    decoded_body = base64.decodebytes(body)
+    decoded_body = base64.b64decode(body)
     print(decoded_body)
     np_array = np.frombuffer(decoded_body, np.uint8)
     return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -125,7 +125,7 @@ def lambda_handler(event, context):
       "isBase64Encoded": True,
       "statusCode": 200,
       "headers": { "content-type": "image/jpeg"},
-      "body":  base64.b64encode(image).decode("utf-8")
+      "body":  base64.b64encode(np.getbuffer(image)).decode("utf-8")
     }
 
 
