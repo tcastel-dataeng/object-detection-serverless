@@ -121,11 +121,19 @@ def lambda_handler(event, context):
 
 #   Create a new key for the image
 
+     # Write grayscale image to /tmp
+    cv2.imwrite("/tmp/detected.jpg", image)
+    
+    # Convert grayscale image into utf-8 encoded base64
+    with open("/tmp/detected.jpg", "rb") as imageFile:
+      str = base64.b64encode(imageFile.read())
+      encoded_img = str.decode("utf-8")
+
     return {
       "isBase64Encoded": True,
       "statusCode": 200,
       "headers": { "content-type": "image/jpeg"},
-      "body":  base64.b64encode(image.tobytes().decode("utf-8")).decode("utf-8")
+      "body":  encoded_img
     }
 
 
