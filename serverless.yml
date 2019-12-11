@@ -38,6 +38,8 @@ custom:
   apigwBinary:
     types:
       - 'image/jpeg'
+      - 'image/png'
+      - '*/*'
 
 provider:
   name: aws
