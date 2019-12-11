@@ -89,6 +89,7 @@ s3 = boto3.client('s3')
 def lambda_handler(event, context):
 
     body = event["body"]
+    print(body)
 
 #   Read image and prepare classes
     
