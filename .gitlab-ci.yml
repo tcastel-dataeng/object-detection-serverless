@@ -17,7 +17,7 @@ deployement:
     - npm install --save-dev serverless-apigw-binary
     - npm install --save-dev serverless-apigwy-binary
   script:
-    - serverless deploy --bucket_name $S3_BUCKET --verbose
+    - serverless remove --bucket_name $S3_BUCKET --verbose
   environment: production
 
 
